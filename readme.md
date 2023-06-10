@@ -127,5 +127,19 @@ Criando arquivo de migração
 yarn sequelize migration:create --name=create-nome_da_tabela
 ```
 
+Migrando estrutura para o banco de dados
+```ps
+yarn sequelize db:migrate
+```
+
+Desfazer ultima migrate, em caso de alteração de campos da tabela e já estar em produção **Nunca o utilize**
+```bash
+yarn sequelize db:migrate:undo
+```
+
+Para alteração de campos de uma tabela que já esteja em produção, crie uma nova migration com a alteração, isso vale para adição de novos campos
+```bash
+yarn migrate migration:create --name=add-age-field-to-users
+```
 
 ## Configuração do **.sequelizerc**
