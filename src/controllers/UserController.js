@@ -1,5 +1,25 @@
 const User = require("../models/User");
 
+function getErrors(errorsArray){
+    let httpStatus = 500;
+    const errors = errorsArray.errors;
+
+    if (errorsArray.name == 'SequelizeValidationError') {
+        httpStatus = 400;
+    }
+
+    if (Array.isArray(errors)){
+        errorsMessages = [];
+
+        errors.forEach(element => {
+            errorsMessages.push(element.message)
+        });
+
+        return { status: httpStatus, errorMessage: errorsMessages };
+    }
+    return { status: httpStatus, errorMessage: "Desculpe pelo transtorno, houve um erro interno. Procure pelo departamento de TI."}
+}
+
 module.exports = {
     // Todos os registros
     async index(req, res) {
@@ -9,7 +29,7 @@ module.exports = {
 
     // obtém o usuário
     async get(req, res) {
-        console.log("method request:", req.method);
+        // console.log("method request:", req.method);
         const { user_id } = req.params;
         const user = await User.findByPk(user_id);
 
@@ -23,8 +43,14 @@ module.exports = {
     // Cria novo registro
     async store(req, res) {
         const { name, email } = req.body;
-        const user = await User.create({ name, email });
-        return res.json(user);
+
+        try {
+            const user = await User.create({ name, email });
+            return res.json(user);
+        } catch (error) {
+            const { status, errorMessage } = getErrors(error);
+            return res.status(status).json({ status: false, message: errorMessage });
+        }
     },
 
     async update(req, res) {

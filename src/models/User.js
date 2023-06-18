@@ -3,8 +3,24 @@ const { Model, DataTypes } = require("sequelize");
 class User extends Model {
     static init(sequelize){
         super.init({
-            name: DataTypes.STRING,
-            email: DataTypes.STRING,
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: {
+                        msg: "Nome é requerido",
+                    }
+                },
+            },
+            email: {
+                type: DataTypes.STRING,
+                validate: {
+                    notEmpty: { msg: "Email é requerido" },
+                    isEmail: {
+                        msg: "Insira um email válido",
+                    }
+                }
+            },
         }, {
             sequelize
         });
@@ -17,3 +33,7 @@ class User extends Model {
 }
 
 module.exports = User;
+// class User extends Model {}
+// User.init({
+
+// })
