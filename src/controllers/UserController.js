@@ -1,24 +1,6 @@
 const User = require("../models/User");
-
-function getErrors(errorsArray){
-    let httpStatus = 500;
-    const errors = errorsArray.errors;
-
-    if (errorsArray.name == 'SequelizeValidationError') {
-        httpStatus = 400;
-    }
-
-    if (Array.isArray(errors)){
-        errorsMessages = [];
-
-        errors.forEach(element => {
-            errorsMessages.push(element.message)
-        });
-
-        return { status: httpStatus, errorMessage: errorsMessages };
-    }
-    return { status: httpStatus, errorMessage: "Desculpe pelo transtorno, houve um erro interno. Procure pelo departamento de TI."}
-}
+const ErrorsController = require("./ErrorsController.js");
+const { getErrors, printName } = ErrorsController;
 
 module.exports = {
     // Todos os registros
@@ -43,6 +25,8 @@ module.exports = {
     // Cria novo registro
     async store(req, res) {
         const { name, email } = req.body;
+
+
 
         try {
             const user = await User.create({ name, email });
