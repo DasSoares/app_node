@@ -1,12 +1,19 @@
+const { NotFoundException } = require("../exceptions.js")
 const User = require("../models/User");
 const ErrorsController = require("./ErrorsController.js");
 const { getErrors, printName } = ErrorsController;
+
 
 module.exports = {
     // Todos os registros
     async index(req, res) {
         const users = await User.findAll();
-        return res.json(users);
+
+        if (!users) {
+            return res.status(404).json({status: false, message: "Registro não encontrado" });
+        }
+
+        return res.status(200).json({status: true, data: users});
     },
 
     // obtém o usuário
@@ -25,8 +32,6 @@ module.exports = {
     // Cria novo registro
     async store(req, res) {
         const { name, email } = req.body;
-
-
 
         try {
             const user = await User.create({ name, email });

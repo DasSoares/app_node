@@ -18,7 +18,8 @@ class User extends Model {
                     notEmpty: { msg: "Email é requerido" },
                     isEmail: {
                         msg: "Insira um email válido",
-                    }
+                    },
+                    // unique:
                 }
             },
         }, {
